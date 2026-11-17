@@ -1,143 +1,125 @@
+// Material widgets. Flutter 3.50 replaced 'package:flutter/material.dart'
+// (used in the labs) with this package. The widgets are the same.
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 
-import 'app_info.dart';
-import 'pages/about_page.dart';
-import 'pages/home_page.dart';
+import 'about_page.dart';
+import 'home_page.dart';
 
-/// Entry point of the app. Starts the app by running [BaggageFeeApp].
 void main() {
-  runApp(const BaggageFeeApp());
+  runApp(const MyApp());
 }
 
-class BaggageFeeApp extends StatelessWidget {
-  const BaggageFeeApp({super.key});
+// App colours, taken from the app icon (Lab 5)
+class AppColors {
+  static const Color colorPrimary = Color(0xFF1565C0); // blue background
+  static const Color colorOnPrimary = Colors.white; // text on top of blue
+  static const Color colorSecondary = Color(0xFFFFA000); // orange "kg" badge
+  static const Color colorOnSecondary = Colors.black; // text on top of orange
+  static const Color colorBackground = Color(0xFFEFF4FB); // light blue-grey
+}
 
-  /// Builds the MaterialApp: sets the app title, the colour theme based on
-  /// the brand colour, hides the debug banner and opens [MainShell] first.
+// Pages in the navigation menu (Lab 3)
+enum MenuAction { home, about }
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: AppInfo.appTitle,
-      debugShowCheckedModeBanner: false,
+      title: 'Baggage Fee Estimator',
+      debugShowCheckedModeBanner: false, // hide the DEBUG banner
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppInfo.brandColor),
+        useMaterial3: true,
+        // Build the colour scheme from our blue and keep our exact colours
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.colorPrimary)
+            .copyWith(
+              primary: AppColors.colorPrimary,
+              onPrimary: AppColors.colorOnPrimary,
+              secondary: AppColors.colorSecondary,
+              onSecondary: AppColors.colorOnSecondary,
+            ),
+        // Light background so the white cards stand out
+        scaffoldBackgroundColor: AppColors.colorBackground,
+        // Same rounded look for every text field
+        inputDecorationTheme: const InputDecorationThemeData(
+          filled: true,
+          fillColor: AppColors.colorBackground,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
       ),
-      home: const MainShell(),
+      home: const MainPage(),
     );
   }
 }
 
-/// Holds the app bar, the navigation drawer (Home / About) and the pages.
-class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+// Main screen: the app bar with the menu, and the selected page below it
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
-  /// Creates the state object that remembers which page is selected.
   @override
-  State<MainShell> createState() => _MainShellState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MainShellState extends State<MainShell> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+class _MainPageState extends State<MainPage> {
+  MenuAction currentPage = MenuAction.home; // page shown on the screen
 
-  int _selectedIndex = 0; // 0 = Home, 1 = About
-
-  /// Shows the page at [index] (0 = Home, 1 = About) and closes the drawer.
-  void _selectPage(int index) {
-    setState(() => _selectedIndex = index);
-    _scaffoldKey.currentState?.closeDrawer();
-  }
-
-  // Android back button: close the drawer, or go from About back to Home.
-  void _handleBack(bool didPop, Object? result) {
-    if (didPop) {
-      return;
-    }
-    final ScaffoldState? scaffold = _scaffoldKey.currentState;
-    if (scaffold != null && scaffold.isDrawerOpen) {
-      scaffold.closeDrawer();
-    } else {
-      setState(() => _selectedIndex = 0);
-    }
-  }
-
-  /// Builds the main screen: the app bar with the app title, the navigation
-  /// drawer with Home and About, and the selected page. PopScope sends the
-  /// Android back button to [_handleBack] when not on the Home page.
   @override
   Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
+    final ColorScheme colors = Theme.of(context).colorScheme;
 
+    // Phone back button on the About page goes back to Home
+    // instead of closing the app
     return PopScope<Object?>(
-      canPop: _selectedIndex == 0,
-      onPopInvokedWithResult: _handleBack,
+      canPop: currentPage == MenuAction.home,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          setState(() => currentPage = MenuAction.home);
+        }
+      },
       child: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text(AppInfo.appTitle),
-          backgroundColor: scheme.primary,
-          foregroundColor: scheme.onPrimary,
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(color: scheme.primary),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        AppInfo.iconAsset,
-                        width: 56,
-                        height: 56,
-                        errorBuilder: (context, error, stackTrace) => Icon(
-                          Icons.luggage,
-                          size: 56,
-                          color: scheme.onPrimary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      AppInfo.appTitle,
-                      style: TextStyle(
-                        color: scheme.onPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                key: const Key('navHome'),
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                selected: _selectedIndex == 0,
-                onTap: () => _selectPage(0),
-              ),
-              ListTile(
-                key: const Key('navAbout'),
-                leading: const Icon(Icons.info),
-                title: const Text('About'),
-                selected: _selectedIndex == 1,
-                onTap: () => _selectPage(1),
-              ),
-            ],
+          title: const Text('Baggage Fee Estimator'), // app title
+          backgroundColor: colors.primary,
+          foregroundColor: colors.onPrimary,
+          // White status bar icons so they can be read on the blue app bar
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.light, // Android
+            statusBarBrightness: Brightness.dark, // iOS
           ),
-        ),
-        // IndexedStack keeps the Home inputs when you visit About and return.
-        body: IndexedStack(
-          key: const Key('pageStack'),
-          index: _selectedIndex,
-          children: const [
-            HomePage(),
-            AboutPage(),
+          actions: [
+            // Navigation menu (three-dot menu) with Home and About
+            PopupMenuButton<MenuAction>(
+              tooltip: 'Menu',
+              onSelected: (MenuAction page) {
+                setState(() => currentPage = page); // show the chosen page
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: MenuAction.home,
+                  child: ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Home'),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: MenuAction.about,
+                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text('About'),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
+        // Show the Home page or the About page
+        body: currentPage == MenuAction.home
+            ? const HomePage()
+            : const AboutPage(),
       ),
     );
   }

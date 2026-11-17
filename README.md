@@ -30,28 +30,22 @@ Mobile Technology individual assignment (CLO2).
 
 ## Features
 
-- App title in the app bar
-- Navigation drawer with **Home** and **About**
-- Input validation (empty, invalid or zero values show an error; letters cannot be typed)
-- Result card showing how each value was worked out
+- App title in the app bar, custom blue theme and status bar icons
+- Navigation menu (three-dot menu) with **Home** and **About**
+- Ticket class chosen with radio buttons
+- Error messages for empty, invalid or zero inputs (letters cannot be typed)
+- Instructions and helpful notices (free allowance, 8% service tax)
+- Result card with the three outputs, and a Reset button
 - About page with app icon, author information, copyright notice and a clickable GitHub link
 - Custom launcher icon (`flutter_launcher_icons`)
-- Unit and widget tests (`flutter test`)
 
 ## Project structure
 
 ```
 lib/
-  main.dart                 App, theme, navigation drawer
-  app_info.dart             App title and author details
-  baggage_calculator.dart   Calculation logic (no UI code)
-  formatters.dart           Number / RM / kg formatting
-  pages/
-    home_page.dart          Input form and result
-    about_page.dart         About page
-test/
-  baggage_calculator_test.dart
-  widget_test.dart
+  main.dart         App, theme, app bar and navigation menu
+  home_page.dart    Inputs, calculation and result
+  about_page.dart   About page
 ```
 
 ## Run
@@ -59,7 +53,6 @@ test/
 ```
 flutter pub get
 flutter run
-flutter test
 ```
 
 ## Author
