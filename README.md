@@ -7,9 +7,9 @@ Mobile Technology individual assignment (CLO2).
 
 | Input | Notes |
 |---|---|
-| Checked baggage weight (kg) | Up to 2 decimal places, must be more than 0 |
+| Checked baggage weight (kg) | Numbers only, must be more than 0 |
 | Ticket class | Economy (free allowance 20 kg) or Business (free allowance 40 kg) |
-| Excess baggage rate per kg (RM) | Up to 2 decimal places, must be more than 0 |
+| Excess baggage rate per kg (RM) | Numbers only, must be more than 0 |
 
 ## Outputs
 
@@ -23,10 +23,10 @@ Mobile Technology individual assignment (CLO2).
 
 | Weight | Class | Rate/kg | Excess weight | Excess charge | Total payable |
 |---|---|---|---|---|---|
-| 25 kg | Economy | RM15 | 5 kg | RM75.00 | RM81.00 |
-| 18 kg | Economy | RM15 | 0 kg | RM0.00 | RM0.00 |
-| 55 kg | Business | RM12 | 15 kg | RM180.00 | RM194.40 |
-| 42.5 kg | Business | RM12 | 2.5 kg | RM30.00 | RM32.40 |
+| 25 kg | Economy | RM 15 | 5.00 kg | RM 75.00 | RM 81.00 |
+| 18 kg | Economy | RM 15 | 0.00 kg | RM 0.00 | RM 0.00 |
+| 55 kg | Business | RM 12 | 15.00 kg | RM 180.00 | RM 194.40 |
+| 42.5 kg | Business | RM 12 | 2.50 kg | RM 30.00 | RM 32.40 |
 
 ## Features
 
