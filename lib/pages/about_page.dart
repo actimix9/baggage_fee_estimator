@@ -26,6 +26,9 @@ class AboutPage extends StatelessWidget {
     }
   }
 
+  /// Builds the About page: the app icon, name, version and description,
+  /// the author information card with the clickable GitHub link, and the
+  /// copyright notice.
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;

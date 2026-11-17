@@ -29,6 +29,9 @@ Future<void> fillAndCalculate(
   await tester.pumpAndSettle();
 }
 
+/// Widget tests that run the real app and check the app bar title, the four
+/// sample results, input validation, and the navigation drawer opening the
+/// About page.
 void main() {
   testWidgets('App title is shown in the app bar', (tester) async {
     await tester.pumpWidget(const BaggageFeeApp());

@@ -2,6 +2,9 @@ import 'package:baggage_fee_estimator/baggage_calculator.dart';
 import 'package:baggage_fee_estimator/formatters.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Unit tests for the calculation and formatting logic: the four sample
+/// results from the assignment brief, plus edge cases (exactly at the
+/// allowance, negative input, and rounding of money).
 void main() {
   group('Sample calculations from the assignment brief', () {
     test('25 kg, economy, RM15/kg -> 5 kg, RM75.00, RM81.00', () {

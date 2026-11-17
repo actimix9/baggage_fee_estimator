@@ -7,6 +7,7 @@ import '../formatters.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  /// Creates the state object that holds the inputs and the latest result.
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -27,6 +28,8 @@ class _HomePageState extends State<HomePage> {
     return _decimalPattern.hasMatch(newValue.text) ? newValue : oldValue;
   });
 
+  /// Frees the two text controllers when the page is removed,
+  /// so they do not leak memory.
   @override
   void dispose() {
     _weightController.dispose();
@@ -58,6 +61,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /// Saves the ticket class the user picked and hides the old result.
+  /// Does nothing if no class was picked (null).
   void _onTicketClassChanged(TicketClass? value) {
     if (value == null) {
       return;
@@ -68,6 +73,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// Runs when Calculate is tapped. Hides the keyboard and checks both
+  /// inputs. If an input is invalid, the error messages show and no result
+  /// is shown. Otherwise it works out the fee with
+  /// [BaggageCalculator.calculate] and shows the result card.
   void _calculate() {
     FocusScope.of(context).unfocus(); // hide the keyboard
 
@@ -89,6 +98,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// Runs when Reset is tapped. Hides the keyboard, clears both input fields
+  /// and their error messages, sets the ticket class back to Economy and
+  /// hides the result.
   void _reset() {
     FocusScope.of(context).unfocus();
     _weightController.clear();
@@ -100,6 +112,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// Builds the Home page form: the weight field, the ticket class radio
+  /// buttons, the rate field, the Calculate and Reset buttons, and the
+  /// result card once a result has been calculated.
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -220,6 +235,9 @@ class _ResultCard extends StatelessWidget {
 
   final BaggageResult result;
 
+  /// Builds the result card: the ticket class and rate, then one row each
+  /// for excess weight, excess charge and total payable (highlighted),
+  /// with the working shown under each label.
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -284,6 +302,9 @@ class _ResultRow extends StatelessWidget {
   final String value;
   final bool highlight;
 
+  /// Builds one result row: the label and its working on the left, the
+  /// value on the right. If [highlight] is true the value is shown bigger,
+  /// bold and in the brand colour.
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
